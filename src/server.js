@@ -7,11 +7,10 @@ const buildAdminRouter = require('./admin.router');
 
 const app = express();
 const port = 5000;
-//controllers 
-const {createProjectLogo  , getAllProjectLogos} = require("./controllers/projectLogo.controller")
+// controllers
+const { createProjectLogo, getAllProjectLogos, getProjectLogoById } = require("./controllers/projectLogo.controller");
 
 app.use(cors());
-
 
 const run = async () => {
   try {
@@ -19,15 +18,13 @@ const run = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false
-    }); 
+    });
 
     console.log('Connected to MongoDB database');
 
   } catch (error) {
     console.error('Error connecting to MongoDB:', error.message);
   }
-
-
 
   const admin = new AdminBro(options);
   const router = buildAdminRouter(admin);
@@ -40,23 +37,17 @@ const run = async () => {
   app.use('/uploads', express.static('uploads'));
 
   app.get("/", (req, res) => {
-    res.send("hello world. I'm JasurBek");
+    res.send("Hello world. I'm JasurBek");
   });
-  // form
 
-  // motto
-  // projectLogos
-  app.post("/projectlogos" , createProjectLogo)
-  app.get("/projectlogos" , getAllProjectLogos)
-
-  // news
-
-  //restaurants
+  // ProjectLogos routes
+  app.post("/projectlogos", createProjectLogo);
+  app.get("/projectlogos", getAllProjectLogos);
+  app.get("/projectlogos/:id", getProjectLogoById); // ID orqali mahsulot olish end-point
 
   app.listen(port, () => console.log(
     `Example app listening at http://localhost:${port}`,
   ));
 };
-
 
 module.exports = run;
